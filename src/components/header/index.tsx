@@ -3,12 +3,12 @@ import search from "../../img/search.svg"
 import shop from "../../img/shop.svg"
 import log from "../../img/Logout.svg"
 import {Button} from "antd"
-import { NavLink, useLocation } from "react-router-dom"
+import { NavLink } from "react-router-dom"
 import { useReduxDispatch } from "../../hooks/useRedux"
 import { setAuhorizationModalVisiblty } from "../../redux/modal-store"
 const Header = () => {
-    const {pathname} = useLocation();
     const dispatch = useReduxDispatch();
+    
   return (
     <div className="w-full border-b-1 border-[#46A35880]">
         <div className="w-[90%] m-auto flex p-4 items-center justify-between">
