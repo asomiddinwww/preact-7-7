@@ -1,4 +1,4 @@
-import { useState } from "react";
+import React, { useState } from "react";
 import { Slider, Button, ConfigProvider, Dropdown, Space, message } from "antd";
 import {
   DownOutlined,
@@ -6,6 +6,8 @@ import {
   HeartOutlined,
   SearchOutlined,
 } from "@ant-design/icons";
+import type { MenuProps } from "antd";
+
 import branch from "../../../img/brannch.jpeg";
 import rig from "../../../img/rig.svg";
 import cardimg1 from "../../../img/cardimg1.png";
@@ -17,7 +19,6 @@ import cardimg6 from "../../../img/cardimg6.png";
 import cardimg7 from "../../../img/cardimg7.png";
 import cardimg8 from "../../../img/cardimg8.png";
 import cardimg9 from "../../../img/cardimg9.png";
-import type { MenuProps } from "antd";
 
 const onClick: MenuProps["onClick"] = ({ key }) => {
   message.info(`Click on item ${key}`);
@@ -28,19 +29,10 @@ const items: MenuProps["items"] = [
   { label: "2nd menu", key: "2" },
   { label: "3rd menu", key: "3" },
 ];
+
 const data = [
-  {
-    id: 1,
-    name: "Barberton Daisy",
-    price: "$119.00",
-    img: cardimg1,
-  },
-  {
-    id: 2,
-    name: "Angel Wing Begonia",
-    price: "$169.00",
-    img: cardimg2,
-  },
+  { id: 1, name: "Barberton Daisy", price: "$119.00", img: cardimg1 },
+  { id: 2, name: "Angel Wing Begonia", price: "$169.00", img: cardimg2 },
   {
     id: 3,
     name: "African Violet",
@@ -48,42 +40,12 @@ const data = [
     priceold: "$229.00",
     img: cardimg3,
   },
-  {
-    id: 4,
-    name: "Beach Spider Lily",
-    price: "$129.00",
-    img: cardimg4,
-  },
-  {
-    id: 5,
-    name: "Blushing Bromeliad",
-    price: "$139.00",
-    img: cardimg5,
-  },
-  {
-    id: 6,
-    name: "Aluminum Plant",
-    price: "$179.00",
-    img: cardimg6,
-  },
-  {
-    id: 7,
-    name: "Bird's Nest Fern",
-    price: "$99.00",
-    img: cardimg7,
-  },
-  {
-    id: 8,
-    name: "Broadleaf Lady Palm",
-    price: "$59.00",
-    img: cardimg8,
-  },
-  {
-    id: 9,
-    name: "Chinese Evergreen",
-    price: "$39.00",
-    img: cardimg9,
-  },
+  { id: 4, name: "Beach Spider Lily", price: "$129.00", img: cardimg4 },
+  { id: 5, name: "Blushing Bromeliad", price: "$139.00", img: cardimg5 },
+  { id: 6, name: "Aluminum Plant", price: "$179.00", img: cardimg6 },
+  { id: 7, name: "Bird's Nest Fern", price: "$99.00", img: cardimg7 },
+  { id: 8, name: "Broadleaf Lady Palm", price: "$59.00", img: cardimg8 },
+  { id: 9, name: "Chinese Evergreen", price: "$39.00", img: cardimg9 },
 ];
 
 const categories = [
@@ -104,29 +66,28 @@ const sizes = [
   { name: "Large", count: 78 },
 ];
 
-const Shop = () => {
-  const [range, setRange] = useState([0, 1230]);
+const Shop: React.FC = () => {
+  const [range, setRange] = useState<number[]>([0, 1230]);
 
-  const handleSliderChange = (value) => {
-    setRange(value);
+  const handleSliderChange = (value: number | number[]) => {
+    setRange(value as number[]);
   };
 
   const handleFilterClick = () => {
     console.log("Filtrlangan narx oralig'i: ", range);
   };
 
-  // Functionlar
-  const addToCart = (e) => {
+  const addToCart = (e: React.MouseEvent) => {
     e.stopPropagation();
     message.success("Savatga qo'shildi");
   };
 
-  const addToWishlist = (e) => {
+  const addToWishlist = (e: React.MouseEvent) => {
     e.stopPropagation();
     message.info("Sevimlilarga qo'shildi");
   };
 
-  const handlePreview = (e) => {
+  const handlePreview = (e: React.MouseEvent) => {
     e.stopPropagation();
     message.info("Tezkor ko'rish");
   };
@@ -134,7 +95,6 @@ const Shop = () => {
   return (
     <div className="w-full py-10 px-2 sm:px-4">
       <div className="flex flex-col lg:flex-row w-full sm:w-[90%] m-auto gap-10">
-        {/* Sidebar */}
         <div className="w-full lg:w-[310px] min-w-[240px]">
           <ConfigProvider
             theme={{
@@ -213,25 +173,28 @@ const Shop = () => {
             </div>
           </ConfigProvider>
           <div className="mt-5 hidden lg:block">
-            <img className="w-full" src={branch} alt="" />
+            <img className="w-full" src={branch} alt="Banner" />
           </div>
         </div>
 
-        {/* Main Content */}
         <div className="flex-1 w-full flex flex-col">
           <div className="w-full flex flex-col md:flex-row items-center justify-between gap-4">
             <div>
               <ul className="flex items-center gap-4 sm:gap-8 text-[12px] sm:text-[16px]">
-                <li>All Plants</li>
-                <li>New Arrivals</li>
-                <li>Sale</li>
+                <li className="cursor-pointer hover:text-[#46A358]">
+                  All Plants
+                </li>
+                <li className="cursor-pointer hover:text-[#46A358]">
+                  New Arrivals
+                </li>
+                <li className="cursor-pointer hover:text-[#46A358]">Sale</li>
               </ul>
             </div>
             <div className="flex items-center gap-3">
               <p className="text-[14px]">Short by:</p>
               <Dropdown menu={{ items, onClick }}>
                 <a onClick={(e) => e.preventDefault()}>
-                  <Space className="text-[14px]">
+                  <Space className="text-[14px] cursor-pointer">
                     Default sorting <DownOutlined />
                   </Space>
                 </a>
@@ -245,10 +208,13 @@ const Shop = () => {
                 key={item.id}
                 className="group border-t-2 border-transparent hover:border-[#46A358] transition-all cursor-pointer w-full"
               >
-                <div className="p-1 pt-12 h-83 pb-12 shadow flex items-center justify-center relative overflow-hidden">
-                  <img src={item.img} className="max-w-full h-auto" />
+                <div className="p-1 pt-12 h-80 pb-12 shadow flex items-center justify-center relative overflow-hidden">
+                  <img
+                    src={item.img}
+                    className="max-w-full h-auto"
+                    alt={item.name}
+                  />
 
-                  {/* Hover Actions */}
                   <div className="absolute bottom-4 flex gap-4 opacity-0 group-hover:opacity-100 transition-all duration-300 transform translate-y-2 group-hover:translate-y-0">
                     <div
                       onClick={addToCart}
@@ -276,30 +242,33 @@ const Shop = () => {
                     <p className="text-[#46A358] font-bold text-[18px]">
                       {item.price}
                     </p>
-                    <p className="text-[#CBCBCB] text-[18px]">
-                      <del>{item.priceold}</del>
-                    </p>
+                    {item.priceold && (
+                      <p className="text-[#CBCBCB] text-[18px]">
+                        <del>{item.priceold}</del>
+                      </p>
+                    )}
                   </div>
                 </div>
               </div>
             ))}
           </div>
+
           <div className="w-full flex justify-end pt-9">
             <div className="flex items-center gap-1">
-              <Button type="primary" className="!bg-[#48a359] !text-white">
-                1
-              </Button>
-              <Button type="primary" className="!bg-[#48a359] !text-white">
-                2
-              </Button>
-              <Button type="primary" className="!bg-[#48a359] !text-white">
-                3
-              </Button>
-              <Button type="primary" className="!bg-[#48a359] !text-white">
-                4
-              </Button>
-              <Button type="primary" className="!bg-[#48a359] !text-white">
-                <img className="text-white!" src={rig} alt="" />
+              {[1, 2, 3, 4].map((num) => (
+                <Button
+                  key={num}
+                  type="primary"
+                  className="!bg-[#46A358] !text-white"
+                >
+                  {num}
+                </Button>
+              ))}
+              <Button
+                type="primary"
+                className="!bg-[#46A358] !text-white flex items-center justify-center"
+              >
+                <img src={rig} alt="next" className="w-4 h-4" />
               </Button>
             </div>
           </div>
