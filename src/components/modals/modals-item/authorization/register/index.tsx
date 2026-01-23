@@ -1,5 +1,7 @@
-import { useState, type ChangeEvent, type FormEvent } from 'react';
-import { Eye, EyeOff } from 'lucide-react';
+import { useState, type ChangeEvent } from 'react';
+import { Eye, EyeOff, Loader } from 'lucide-react';
+import { message } from 'antd';
+import { useRegisterMutation } from '../../../../../hooks/useQuery/useQuerRegis';
 
 interface FormData {
   username: string;
@@ -18,6 +20,9 @@ const Register: React.FC = () => {
     confirmPassword: ''
   });
 
+  // Backend hookini chaqiramiz
+  const { mutate, isPending } = useRegisterMutation();
+
   const handleChange = (e: ChangeEvent<HTMLInputElement>): void => {
     setFormData({
       ...formData,
@@ -25,9 +30,26 @@ const Register: React.FC = () => {
     });
   };
 
-  const handleSubmit = (e: FormEvent<HTMLButtonElement>): void => {
+  const handleSubmit = (e: React.MouseEvent<HTMLButtonElement>): void => {
     e.preventDefault();
-    console.log('Register:', formData);
+
+    // Validatsiya
+    if (!formData.username || !formData.email || !formData.password) {
+      return (void message.warning("Barcha maydonlarni to'ldiring!"));
+    }
+
+    if (formData.password !== formData.confirmPassword) {
+      return (void message.error("Parollar mos kelmadi!"));
+    }
+
+    // Backendga yuborish mantiqi
+    // API'da surname majburiy bo'lgani uchun username-ni ikkiga bo'lamiz yoki takrorlaymiz
+    mutate({
+      name: formData.username, 
+      surname: formData.username, // API talabi uchun
+      email: formData.email,
+      password: formData.password
+    });
   };
 
   const handleGoogleSignIn = (): void => {
@@ -109,9 +131,10 @@ const Register: React.FC = () => {
 
             <button
               onClick={handleSubmit}
-              className="w-full bg-green-600 hover:bg-green-700 text-white font-medium py-3 rounded-md transition duration-200 mt-6"
+              disabled={isPending}
+              className="w-full bg-green-600 hover:bg-green-700 text-white font-medium py-3 rounded-md transition duration-200 mt-6 flex justify-center items-center disabled:opacity-50"
             >
-              Register
+              {isPending ? <Loader className="animate-spin w-6 h-6" /> : "Register"}
             </button>
           </div>
 

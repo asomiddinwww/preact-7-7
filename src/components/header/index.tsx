@@ -1,36 +1,139 @@
-import logo from "../../img/Logo.svg"
-import search from "../../img/search.svg"
-import shop from "../../img/shop.svg"
-import log from "../../img/Logout.svg"
-import {Button} from "antd"
-import { NavLink } from "react-router-dom"
-import { useReduxDispatch } from "../../hooks/useRedux"
-import { setAuhorizationModalVisiblty } from "../../redux/modal-store"
-const Header = () => {
-    const dispatch = useReduxDispatch();
-    
-  return (
-    <div className="w-full border-b-1 border-[#46A35880]">
-        <div className="w-[90%] m-auto flex p-4 items-center justify-between">
-            <div><img src={logo} alt="" /></div>
-            <div>
-                <ul className="flex items-center gap-10">
-                    <NavLink to={"/home"} className={({isActive}) => isActive ? "border-b-3 pb-3 border-[#46A358]" : "pb-3 border-b-3 border-[#ffffff00]"}>Home</NavLink>
-                    <NavLink to={"/shop"} className={({isActive}) => isActive ? "border-b-3 pb-3 border-[#46A358]" : "pb-3 border-b-3 border-[#ffffff00]"}>Shop</NavLink>
-                    <NavLink to={"/Plant"} className={({isActive}) => isActive ? "border-b-3 pb-3 border-[#46A358]" : "pb-3 border-b-3 border-[#ffffff00]"}>Plant Care</NavLink>
-                    <NavLink to={"/Blogs"} className={({isActive}) => isActive ? "border-b-3 pb-3 border-[#46A358]" : "pb-3 border-b-3 border-[#ffffff00]"}>Blog</NavLink>
-                </ul>
-            </div>
-            <div className="flex items-center gap-7">
-                <div><img src={search} alt={search} /></div>
-                <div><img src={shop}  /></div>
-                <div>
-                    <Button onClick={() => dispatch(setAuhorizationModalVisiblty())} type="primary" className="!pl-5 !pr-5 !bg-[#46A358] !h-9 !font-700"><img src={log} alt="" />Login</Button>
-                </div>
-            </div>
-        </div>
-    </div>
-  )
-}
+import { useState } from "react";
+import logo from "../../img/Logo.svg";
+import search from "../../img/search.svg";
+import shop from "../../img/shop.svg";
+import log from "../../img/Logout.svg";
+import { Button } from "antd";
+import { NavLink } from "react-router-dom";
+import { useReduxDispatch } from "../../hooks/useRedux";
+import { setAuhorizationModalVisiblty } from "../../redux/modal-store";
+import { MenuOutlined, CloseOutlined } from "@ant-design/icons";
 
-export default Header
+const Header = () => {
+  const dispatch = useReduxDispatch();
+  const [isMenuOpen, setIsMenuOpen] = useState(false);
+
+  const toggleMenu = () => setIsMenuOpen(!isMenuOpen);
+
+  return (
+    <div className="w-full border-b-1 border-[#46A35880] fixed bg-white z-50">
+      <div className="w-[95%] md:w-[90%] m-auto flex p-3 md:p-4 items-center justify-between">
+        <div className="flex-shrink-0">
+          <img src={logo} alt="logo" className="w-[120px] md:w-auto" />
+        </div>
+
+        <div className="hidden md:block">
+          <ul className="flex items-center gap-6 lg:gap-10">
+            <NavLink
+              to={"/home"}
+              className={({ isActive }) =>
+                isActive
+                  ? "border-b-3 pb-3 border-[#46A358]"
+                  : "pb-3 border-b-3 border-[#ffffff00]"
+              }
+            >
+              Home
+            </NavLink>
+            <NavLink
+              to={"/shop"}
+              className={({ isActive }) =>
+                isActive
+                  ? "border-b-3 pb-3 border-[#46A358]"
+                  : "pb-3 border-b-3 border-[#ffffff00]"
+              }
+            >
+              Shop
+            </NavLink>
+            <NavLink
+              to={"/Plant"}
+              className={({ isActive }) =>
+                isActive
+                  ? "border-b-3 pb-3 border-[#46A358]"
+                  : "pb-3 border-b-3 border-[#ffffff00]"
+              }
+            >
+              Plant Care
+            </NavLink>
+            <NavLink
+              to={"/Blogs"}
+              className={({ isActive }) =>
+                isActive
+                  ? "border-b-3 pb-3 border-[#46A358]"
+                  : "pb-3 border-b-3 border-[#ffffff00]"
+              }
+            >
+              Blog
+            </NavLink>
+          </ul>
+        </div>
+
+        <div className="flex items-center gap-3 md:gap-7">
+          <img src={search} alt="search" className="w-5 cursor-pointer" />
+          <img src={shop} alt="shop" className="w-5 cursor-pointer" />
+
+          <Button
+            onClick={() => dispatch(setAuhorizationModalVisiblty())}
+            type="primary"
+            className=" xs:!flex !items-center !gap-2 !bg-[#46A358] !h-9 !font-700"
+          >
+            <img src={log} alt="log" /> Login
+          </Button>
+
+          <div className="md:hidden flex items-center">
+            <button onClick={toggleMenu} className="text-2xl text-[#46A358]">
+              {isMenuOpen ? <CloseOutlined /> : <MenuOutlined />}
+            </button>
+          </div>
+        </div>
+      </div>
+
+      {/* Mobil Menu (Ochildi-yopildi mantiqi) */}
+      <div
+        className={`fixed z-999 w-full h-[100vh] w-full bg-white border-b border-[#46A35880] transition-all duration-300 md:hidden ${isMenuOpen ? "opacity-100 visible" : "opacity-0 invisible"}`}
+      >
+        <ul className="flex flex-col items-center gap-5 py-6">
+          <NavLink
+            onClick={toggleMenu}
+            to={"/home"}
+            className="text-lg font-medium"
+          >
+            Home
+          </NavLink>
+          <NavLink
+            onClick={toggleMenu}
+            to={"/shop"}
+            className="text-lg font-medium"
+          >
+            Shop
+          </NavLink>
+          <NavLink
+            onClick={toggleMenu}
+            to={"/Plant"}
+            className="text-lg font-medium"
+          >
+            Plant Care
+          </NavLink>
+          <NavLink
+            onClick={toggleMenu}
+            to={"/Blogs"}
+            className="text-lg font-medium"
+          >
+            Blog
+          </NavLink>
+          <Button
+            onClick={() => {
+              dispatch(setAuhorizationModalVisiblty());
+              toggleMenu();
+            }}
+            type="primary"
+            className="xs:!hidden !flex !items-center !gap-2 !bg-[#46A358] !h-9"
+          >
+            <img src={log} alt="log" /> Login
+          </Button>
+        </ul>
+      </div>
+    </div>
+  );
+};
+
+export default Header;
