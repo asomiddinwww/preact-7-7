@@ -1,4 +1,5 @@
 import axios from "axios";
+import Cookies from "js-cookie";
 
 interface AxiosType {
   url: string;
@@ -14,6 +15,7 @@ export const useAxios = () => {
       method,
       headers: {
         "Content-Type": "application/json",
+        Authorization: `Bearer ${Cookies.get("token")}`,
       },
       data: body,
       params: {

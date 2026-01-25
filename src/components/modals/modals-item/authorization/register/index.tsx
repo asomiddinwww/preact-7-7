@@ -1,7 +1,8 @@
-import { useState, type ChangeEvent } from 'react';
-import { Eye, EyeOff, Loader } from 'lucide-react';
-import { message } from 'antd';
-import { useRegisterMutation } from '../../../../../hooks/useQuery/useQuerRegis';
+import { useState, type ChangeEvent } from "react";
+import { Eye, EyeOff, Loader } from "lucide-react";
+import { message } from "antd";
+import { GoogleLogin } from "@react-oauth/google"; // Google import
+import { useRegisterMutation } from "../../../../../hooks/useQuery/useQuerRegis";
 
 interface FormData {
   username: string;
@@ -12,162 +13,179 @@ interface FormData {
 
 const Register: React.FC = () => {
   const [showPassword, setShowPassword] = useState<boolean>(false);
-  const [showConfirmPassword, setShowConfirmPassword] = useState<boolean>(false);
+  const [showConfirmPassword, setShowConfirmPassword] =
+    useState<boolean>(false);
   const [formData, setFormData] = useState<FormData>({
-    username: '',
-    email: '',
-    password: '',
-    confirmPassword: ''
+    username: "",
+    email: "",
+    password: "",
+    confirmPassword: "",
   });
 
-  // Backend hookini chaqiramiz
   const { mutate, isPending } = useRegisterMutation();
 
   const handleChange = (e: ChangeEvent<HTMLInputElement>): void => {
     setFormData({
       ...formData,
-      [e.target.name]: e.target.value
+      [e.target.name]: e.target.value,
     });
   };
 
-  const handleSubmit = (e: React.MouseEvent<HTMLButtonElement>): void => {
-    e.preventDefault();
+  const handleSubmit = (e?: React.FormEvent): void => {
+    if (e) e.preventDefault();
 
-    // Validatsiya
     if (!formData.username || !formData.email || !formData.password) {
-      return (void message.warning("Barcha maydonlarni to'ldiring!"));
+      message.warning("Barcha maydonlarni to'ldiring!");
+      return;
     }
 
     if (formData.password !== formData.confirmPassword) {
-      return (void message.error("Parollar mos kelmadi!"));
+      message.error("Parollar mos kelmadi!");
+      return;
     }
 
-    // Backendga yuborish mantiqi
-    // API'da surname majburiy bo'lgani uchun username-ni ikkiga bo'lamiz yoki takrorlaymiz
+    // Username ni name va surname ga ajratish (agar bo'shliq bo'lsa)
+    const nameParts = formData.username.trim().split(" ");
+    const name = nameParts[0];
+    const surname =
+      nameParts.length > 1 ? nameParts.slice(1).join(" ") : nameParts[0];
+
     mutate({
-      name: formData.username, 
-      surname: formData.username, // API talabi uchun
+      name: name,
+      surname: surname,
       email: formData.email,
-      password: formData.password
+      password: formData.password,
     });
   };
 
-  const handleGoogleSignIn = (): void => {
-    console.log('Continue with Google');
+  // Google Register muvaffaqiyatli bo'lganda
+  const handleGoogleSuccess = (response: any) => {
+    message.loading("Google ma'lumotlari tekshirilmoqda...");
+
+    // Login bilan bir xil endpoint yoki Google Register endpointiga yuboring
+    // Odatda backend credential (JWT) orqali user ma'lumotlarini o'zi oladi
+    mutate({
+      email: "google-auth", // Backend talabiga qarab
+      password: "google-auth-password",
+      access_token: response.credential,
+    } as any);
   };
 
   const handleFacebookSignIn = (): void => {
-    console.log('Continue with Facebook');
+    console.log("Continue with Facebook");
   };
 
   return (
-    <div>
-      <div className="w-full max-w-md">
-        <div className="p-8">
-          <div className="text-center mb-3">
-            <p className="text-gray-600 text-sm">
-              Enter your email and password to register.
-            </p>
+    <div className="w-full max-w-md mx-auto">
+      <div className="p-8">
+        <div className="text-center mb-6">
+          <p className="text-gray-600 text-sm">
+            Ro'yxatdan o'tish uchun ma'lumotlarni kiriting.
+          </p>
+        </div>
+
+        <form onSubmit={(e) => e.preventDefault()} className="space-y-4">
+          <div>
+            <input
+              type="text"
+              name="username"
+              value={formData.username}
+              onChange={handleChange}
+              placeholder="Full Name (e.g. John Doe)"
+              className="w-full px-4 py-3 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-green-500 transition"
+            />
           </div>
 
-          <div className="space-y-4">
-            <div>
-              <input
-                type="text"
-                name="username"
-                value={formData.username}
-                onChange={handleChange}
-                placeholder="Username"
-                className="w-full px-4 py-3 border border-gray-300 rounded-md text-gray-700 placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-green-500 focus:border-transparent transition"
-              />
-            </div>
+          <div>
+            <input
+              type="email"
+              name="email"
+              value={formData.email}
+              onChange={handleChange}
+              placeholder="Enter your email address"
+              className="w-full px-4 py-3 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-green-500 transition"
+            />
+          </div>
 
-            <div>
-              <input
-                type="email"
-                name="email"
-                value={formData.email}
-                onChange={handleChange}
-                placeholder="Enter your email address"
-                className="w-full px-4 py-3 border border-gray-300 rounded-md text-gray-700 placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-green-500 focus:border-transparent transition"
-              />
-            </div>
-
-            <div className="relative">
-              <input
-                type={showPassword ? 'text' : 'password'}
-                name="password"
-                value={formData.password}
-                onChange={handleChange}
-                placeholder="Password"
-                className="w-full px-4 py-3 border border-gray-300 rounded-md text-gray-700 placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-green-500 focus:border-transparent transition"
-              />
-              <button
-                type="button"
-                onClick={() => setShowPassword(!showPassword)}
-                className="absolute right-4 top-1/2 transform -translate-y-1/2 text-gray-400 hover:text-gray-600"
-              >
-                {showPassword ? <EyeOff className="w-5 h-5" /> : <Eye className="w-5 h-5" />}
-              </button>
-            </div>
-
-            <div className="relative">
-              <input
-                type={showConfirmPassword ? 'text' : 'password'}
-                name="confirmPassword"
-                value={formData.confirmPassword}
-                onChange={handleChange}
-                placeholder="Confirm Password"
-                className="w-full px-4 py-3 border border-gray-300 rounded-md text-gray-700 placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-green-500 focus:border-transparent transition"
-              />
-              <button
-                type="button"
-                onClick={() => setShowConfirmPassword(!showConfirmPassword)}
-                className="absolute right-4 top-1/2 transform -translate-y-1/2 text-gray-400 hover:text-gray-600"
-              >
-                {showConfirmPassword ? <EyeOff className="w-5 h-5" /> : <Eye className="w-5 h-5" />}
-              </button>
-            </div>
-
+          <div className="relative">
+            <input
+              type={showPassword ? "text" : "password"}
+              name="password"
+              value={formData.password}
+              onChange={handleChange}
+              placeholder="Password"
+              className="w-full px-4 py-3 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-green-500 transition"
+            />
             <button
-              onClick={handleSubmit}
-              disabled={isPending}
-              className="w-full bg-green-600 hover:bg-green-700 text-white font-medium py-3 rounded-md transition duration-200 mt-6 flex justify-center items-center disabled:opacity-50"
+              type="button"
+              onClick={() => setShowPassword(!showPassword)}
+              className="absolute right-4 top-1/2 -translate-y-1/2 text-gray-400 hover:text-gray-600"
             >
-              {isPending ? <Loader className="animate-spin w-6 h-6" /> : "Register"}
+              {showPassword ? <EyeOff size={20} /> : <Eye size={20} />}
             </button>
           </div>
 
-          <div className="flex items-center my-6">
-            <div className="flex-1 border-t border-gray-300"></div>
-            <span className="px-4 text-sm text-gray-500">Or register with</span>
-            <div className="flex-1 border-t border-gray-300"></div>
-          </div>
-
-          <div className="space-y-3">
+          <div className="relative">
+            <input
+              type={showConfirmPassword ? "text" : "password"}
+              name="confirmPassword"
+              value={formData.confirmPassword}
+              onChange={handleChange}
+              placeholder="Confirm Password"
+              className="w-full px-4 py-3 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-green-500 transition"
+            />
             <button
-              onClick={handleGoogleSignIn}
-              className="w-full flex items-center justify-center gap-3 px-4 py-3 border border-gray-300 rounded-md hover:bg-gray-50 transition"
+              type="button"
+              onClick={() => setShowConfirmPassword(!showConfirmPassword)}
+              className="absolute right-4 top-1/2 -translate-y-1/2 text-gray-400 hover:text-gray-600"
             >
-              <svg className="w-5 h-5" viewBox="0 0 24 24">
-                <path fill="#4285F4" d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z"/>
-                <path fill="#34A853" d="M12 23c2.97 0 5.46-.98 7.28-2.66l-3.57-2.77c-.98.66-2.23 1.06-3.71 1.06-2.86 0-5.29-1.93-6.16-4.53H2.18v2.84C3.99 20.53 7.7 23 12 23z"/>
-                <path fill="#FBBC05" d="M5.84 14.09c-.22-.66-.35-1.36-.35-2.09s.13-1.43.35-2.09V7.07H2.18C1.43 8.55 1 10.22 1 12s.43 3.45 1.18 4.93l2.85-2.22.81-.62z"/>
-                <path fill="#EA4335" d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.07l3.66 2.84c.87-2.6 3.3-4.53 6.16-4.53z"/>
-              </svg>
-              <span className="text-gray-700 text-sm font-medium">Continue with Google</span>
-            </button>
-
-            <button
-              onClick={handleFacebookSignIn}
-              className="w-full flex items-center justify-center gap-3 px-4 py-3 border border-gray-300 rounded-md hover:bg-gray-50 transition"
-            >
-              <svg className="w-5 h-5" fill="#1877F2" viewBox="0 0 24 24">
-                <path d="M24 12.073c0-6.627-5.373-12-12-12s-12 5.373-12 12c0 5.99 4.388 10.954 10.125 11.854v-8.385H7.078v-3.47h3.047V9.43c0-3.007 1.792-4.669 4.533-4.669 1.312 0 2.686.235 2.686.235v2.953H15.83c-1.491 0-1.956.925-1.956 1.874v2.25h3.328l-.532 3.47h-2.796v8.385C19.612 23.027 24 18.062 24 12.073z"/>
-              </svg>
-              <span className="text-gray-700 text-sm font-medium">Continue with Facebook</span>
+              {showConfirmPassword ? <EyeOff size={20} /> : <Eye size={20} />}
             </button>
           </div>
+
+          <button
+            type="button"
+            onClick={(e) => handleSubmit()}
+            disabled={isPending}
+            className="w-full bg-[#46A358] hover:bg-green-700 text-white font-medium py-3 rounded-md transition duration-200 mt-6 flex justify-center items-center disabled:opacity-50"
+          >
+            {isPending ? (
+              <Loader className="animate-spin w-6 h-6" />
+            ) : (
+              "Register"
+            )}
+          </button>
+        </form>
+
+        <div className="flex items-center my-6">
+          <div className="flex-1 border-t border-gray-300"></div>
+          <span className="px-4 text-sm text-gray-500">Or register with</span>
+          <div className="flex-1 border-t border-gray-300"></div>
+        </div>
+
+        <div className="space-y-3">
+          {/* ISHLAYDIGAN GOOGLE TUGMASI */}
+          <div className="flex justify-center w-full">
+            <GoogleLogin
+              onSuccess={handleGoogleSuccess}
+              onError={() => message.error("Google xatoligi!")}
+              useOneTap
+              theme="outline"
+              width="384px" // max-w-md kengligiga mos
+            />
+          </div>
+
+          <button
+            onClick={handleFacebookSignIn}
+            className="w-full flex items-center justify-center gap-3 px-4 py-2 border border-gray-300 rounded-md hover:bg-gray-50 transition"
+          >
+            <svg className="w-5 h-5" fill="#1877F2" viewBox="0 0 24 24">
+              <path d="M24 12.073c0-6.627-5.373-12-12-12s-12 5.373-12 12c0 5.99 4.388 10.954 10.125 11.854v-8.385H7.078v-3.47h3.047V9.43c0-3.007 1.792-4.669 4.533-4.669 1.312 0 2.686.235 2.686.235v2.953H15.83c-1.491 0-1.956.925-1.956 1.874v2.25h3.328l-.532 3.47h-2.796v8.385C19.612 23.027 24 18.062 24 12.073z" />
+            </svg>
+            <span className="text-gray-700 text-sm font-medium">
+              Continue with Facebook
+            </span>
+          </button>
         </div>
       </div>
     </div>

@@ -1,0 +1,15 @@
+import Categor from "./category";
+import Productss from "./products";
+
+const Products = () => {
+  return (
+    <div className="w-full pb-30">
+      <div className="flex w-[90%] gap-3 m-auto gap-10 bg-[#fafafa]">
+        <Categor />
+        <Productss />
+      </div>
+    </div>
+  );
+};
+
+export default Products;

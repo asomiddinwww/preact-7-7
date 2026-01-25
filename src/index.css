@@ -8,3 +8,6 @@
 .group img {
   transition: all 0.3s;
 }
+.ant-card-meta-detail {
+  height: 240px;
+}

@@ -95,7 +95,7 @@ const Shop: React.FC = () => {
   return (
     <div className="w-full py-10 px-2 sm:px-4">
       <div className="flex flex-col lg:flex-row w-full sm:w-[90%] m-auto gap-10">
-        <div className="w-full lg:w-[310px] min-w-[240px]">
+        {/* <div className="w-full lg:w-[310px] min-w-[240px]">
           <ConfigProvider
             theme={{
               token: {
@@ -175,7 +175,7 @@ const Shop: React.FC = () => {
           <div className="mt-5 hidden lg:block">
             <img className="w-full" src={branch} alt="Banner" />
           </div>
-        </div>
+        </div> */}
 
         <div className="flex-1 w-full flex flex-col">
           <div className="w-full flex flex-col md:flex-row items-center justify-between gap-4">
@@ -208,7 +208,7 @@ const Shop: React.FC = () => {
                 key={item.id}
                 className="group border-t-2 border-transparent hover:border-[#46A358] transition-all cursor-pointer w-full"
               >
-                <div className="p-1 pt-12 h-80 pb-12 shadow flex items-center justify-center relative overflow-hidden">
+                <div className="p-1 pt-12 h-80 pb-12 shadow flex items-center justify-center relative overflow-hidden bg-[#FBFBFB]">
                   <img
                     src={item.img}
                     className="max-w-full h-auto"
