@@ -21,7 +21,7 @@ const Login: React.FC = () => {
     message.loading("Tizimga kirilmoqda...");
 
     mutate(payload as any, {
-      onSuccess: (res) => {
+      onSuccess: () => {
         message.success("Muvaffaqiyatli kirdingiz!");
       },
       onError: (err: any) => {

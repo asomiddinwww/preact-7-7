@@ -1,4 +1,4 @@
-import React, { useState, useMemo } from "react";
+import { useState, useMemo } from "react";
 import { useSearchParams } from "react-router-dom";
 import { Button, Slider, ConfigProvider, Skeleton } from "antd";
 import { useQueryHandler } from "../../../hooks/useQuery";

@@ -145,7 +145,7 @@ const Register: React.FC = () => {
 
           <button
             type="button"
-            onClick={(e) => handleSubmit()}
+            onClick={() => handleSubmit()}
             disabled={isPending}
             className="w-full bg-[#46A358] hover:bg-green-700 text-white font-medium py-3 rounded-md transition duration-200 mt-6 flex justify-center items-center disabled:opacity-50"
           >

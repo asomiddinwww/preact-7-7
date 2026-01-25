@@ -1,5 +1,4 @@
 import { useQueryHandler } from "../../../../hooks/useQuery";
-import type { DiscountFlowerType, QueryType } from "../../../../@types/inedx";
 
 const Card = () => {
   const { data, isLoading, isError } = useQueryHandler({
@@ -32,7 +31,7 @@ const Card = () => {
           className="max-w-full h-auto object-contain"
         />
       </div>
-
+      <div>as</div>
       <div className="absolute bottom-0 w-full h-1 bg-[#46A358]/20" />
     </div>
   );

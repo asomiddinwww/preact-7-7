@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { Slider, Button, ConfigProvider, Dropdown, Space, message } from "antd";
+import { Button, Dropdown, Space, message } from "antd";
 import {
   DownOutlined,
   ShoppingCartOutlined,
@@ -8,7 +8,6 @@ import {
 } from "@ant-design/icons";
 import type { MenuProps } from "antd";
 
-import branch from "../../../img/brannch.jpeg";
 import rig from "../../../img/rig.svg";
 import cardimg1 from "../../../img/cardimg1.png";
 import cardimg2 from "../../../img/cardimg2.png";
@@ -48,35 +47,7 @@ const data = [
   { id: 9, name: "Chinese Evergreen", price: "$39.00", img: cardimg9 },
 ];
 
-const categories = [
-  { name: "House Plants", count: 33, active: true },
-  { name: "Potter Plants", count: 12 },
-  { name: "Seeds", count: 65 },
-  { name: "Small Plants", count: 39 },
-  { name: "Big Plants", count: 23 },
-  { name: "Succulents", count: 17 },
-  { name: "Trerrariums", count: 19 },
-  { name: "Gardening", count: 13 },
-  { name: "Accessories", count: 18 },
-];
-
-const sizes = [
-  { name: "Small", count: 119 },
-  { name: "Medium", count: 86 },
-  { name: "Large", count: 78 },
-];
-
 const Shop: React.FC = () => {
-  const [range, setRange] = useState<number[]>([0, 1230]);
-
-  const handleSliderChange = (value: number | number[]) => {
-    setRange(value as number[]);
-  };
-
-  const handleFilterClick = () => {
-    console.log("Filtrlangan narx oralig'i: ", range);
-  };
-
   const addToCart = (e: React.MouseEvent) => {
     e.stopPropagation();
     message.success("Savatga qo'shildi");
@@ -95,88 +66,6 @@ const Shop: React.FC = () => {
   return (
     <div className="w-full py-10 px-2 sm:px-4">
       <div className="flex flex-col lg:flex-row w-full sm:w-[90%] m-auto gap-10">
-        {/* <div className="w-full lg:w-[310px] min-w-[240px]">
-          <ConfigProvider
-            theme={{
-              token: {
-                colorPrimary: "#46A358",
-              },
-            }}
-          >
-            <div className="bg-[#FBFBFB] p-4 font-sans">
-              <div className="mb-8">
-                <h3 className="text-[18px] font-bold mb-4 text-[#3D3D3D]">
-                  Categories
-                </h3>
-                <ul className="space-y-4 pl-2">
-                  {categories.map((cat, index) => (
-                    <li
-                      key={index}
-                      className={`flex justify-between items-center cursor-pointer hover:text-[#46A358] transition-colors ${cat.active ? "text-[#46A358] font-bold" : "text-[#3D3D3D]"}`}
-                    >
-                      <span className="text-[15px]">{cat.name}</span>
-                      <span className="text-[15px]">({cat.count})</span>
-                    </li>
-                  ))}
-                </ul>
-              </div>
-
-              <div className="mb-10">
-                <h3 className="text-[18px] font-bold mb-4 text-[#3D3D3D]">
-                  Price Range
-                </h3>
-                <div className="px-2">
-                  <Slider
-                    range
-                    min={0}
-                    max={1500}
-                    value={range}
-                    onChange={handleSliderChange}
-                    styles={{
-                      track: { background: "#46A358" },
-                      handle: { background: "#46A358", borderColor: "#46A358" },
-                    }}
-                  />
-                  <div className="mt-4">
-                    <p className="text-[#3D3D3D] text-[15px]">
-                      Price:{" "}
-                      <span className="text-[#46A358] font-bold">
-                        ${range[0]} - ${range[1]}
-                      </span>
-                    </p>
-                    <Button
-                      onClick={handleFilterClick}
-                      className="mt-4 bg-[#46A358] hover:bg-[#3d8d4c]! text-white border-none h-[38px] px-7 font-bold rounded-md"
-                    >
-                      Filter
-                    </Button>
-                  </div>
-                </div>
-              </div>
-
-              <div>
-                <h3 className="text-[18px] font-bold mb-4 text-[#3D3D3D]">
-                  Size
-                </h3>
-                <ul className="space-y-4 pl-2">
-                  {sizes.map((size, index) => (
-                    <li
-                      key={index}
-                      className="flex justify-between items-center cursor-pointer hover:text-[#46A358] transition-colors text-[#3D3D3D]"
-                    >
-                      <span className="text-[15px]">{size.name}</span>
-                      <span className="text-[15px]">({size.count})</span>
-                    </li>
-                  ))}
-                </ul>
-              </div>
-            </div>
-          </ConfigProvider>
-          <div className="mt-5 hidden lg:block">
-            <img className="w-full" src={branch} alt="Banner" />
-          </div>
-        </div> */}
-
         <div className="flex-1 w-full flex flex-col">
           <div className="w-full flex flex-col md:flex-row items-center justify-between gap-4">
             <div>
