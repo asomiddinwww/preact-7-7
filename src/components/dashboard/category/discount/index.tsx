@@ -16,11 +16,11 @@ const Discount = () => {
   return (
     <div className="bg-[#FBFBFB] mt-5 p-4 text-center">
       <h2 className="text-[#46A358] text-2xl font-bold">
-        {/* BU YERDA: discount_up_to deb yozing (backend-ga qarab) */}
         {discountData.discoount_up_to || 0}% OFF
       </h2>
       <h3 className="text-[18px] font-bold text-[#3D3D3D] mt-2">
         {discountData.title}
+        now end
       </h3>
       <div className="mt-4 flex justify-center">
         <img

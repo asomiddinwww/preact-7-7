@@ -242,7 +242,7 @@ const Footer = () => {
       <div className="w-full">
         <div className="w-[90%] max-sm:w-[95%] m-auto pb-2 max-[280px]:pb-1 flex items-center justify-center border-t-1 pt-2 max-[280px]:pt-1 border-[#46A35833]">
           <p className="text-[14px] max-sm:text-[12px] max-[280px]:text-[9px] font-[400] text-[#3D3D3D] max-[280px]:text-center">
-            © 2021 GreenShop. All Rights Reserved.
+            © 2026 GreenShop. All Rights Reserved..
           </p>
         </div>
       </div>
