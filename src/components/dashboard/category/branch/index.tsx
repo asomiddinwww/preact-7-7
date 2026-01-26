@@ -1,5 +1,5 @@
 const Branch = () => {
-  return <div>asdasdasd</div>;
+  return <div></div>;
 };
 
 export default Branch;

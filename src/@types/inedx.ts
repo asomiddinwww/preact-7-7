@@ -85,3 +85,9 @@ export interface ProductType {
   userPrice?: number;
   _id: string;
 }
+export interface DiscountFlowerType {
+  discoount_up_to: number;
+  id: number;
+  poster_image_url: string;
+  title: string;
+}
