@@ -1,105 +1,109 @@
-import { useState, useMemo } from "react";
-import { useSearchParams } from "react-router-dom";
-import { Button, Slider, ConfigProvider, Skeleton } from "antd";
+import { useState } from "react"; // Narxni vaqtincha saqlash uchun
+import { LoaderApi } from "../../../generic/loader";
+import { useSearchParamsHandler } from "../../../hooks/paramsApi";
 import { useQueryHandler } from "../../../hooks/useQuery";
-import type { CategoryType, QueryType } from "../../../@types/inedx";
 import Discount from "./discount";
+import type { CategoryType } from "../../../@types/inedx";
 
-const Categor = () => {
-  const [searchParams, setSearchParams] = useSearchParams();
+const Category = () => {
+  const { setParam, getParam } = useSearchParamsHandler();
 
-  const currentCategory = searchParams.get("category") || "house-plants";
-  const minPrice = Number(searchParams.get("min_price")) || 0;
-  const maxPrice = Number(searchParams.get("max_price")) || 1500;
+  const [priceRange, setPriceRange] = useState([39, 1230]);
 
-  const [range, setRange] = useState<number[]>([minPrice, maxPrice]);
-
-  const { data, isLoading, isError }: QueryType<any> = useQueryHandler({
+  const queryResponse = useQueryHandler({
     url: "flower/category",
-    pathname: "category-list",
+    pathname: "category",
   });
 
-  const categories: CategoryType[] = useMemo(() => {
-    // Backend ba'zan o'ralgan obyektda qaytaradi, shuni tekshiramiz
-    if (Array.isArray(data)) return data;
-    if (Array.isArray(data?.data)) return data.data;
-    return [];
-  }, [data]);
+  const { isLoading, isError } = queryResponse;
+  const categories = (queryResponse.data as any)?.data as CategoryType[];
+  const { categoryLoader } = LoaderApi();
 
-  const handleFilter = (categoryId?: string) => {
-    const params = new URLSearchParams(searchParams);
-    if (categoryId !== undefined) {
-      params.set("category", categoryId || "house-plants");
-    }
-    params.set("min_price", range[0].toString());
-    params.set("max_price", range[1].toString());
-    params.set("page", "1");
-    setSearchParams(params);
+  const sizes = [
+    { id: 1, title: "Small", count: 119, key: "small" },
+    { id: 2, title: "Medium", count: 86, key: "medium" },
+    { id: 3, title: "Large", count: 78, key: "large" },
+  ];
+
+  const handleFilterPrice = () => {
+    setParam({
+      min_price: priceRange[0],
+      max_price: priceRange[1],
+    });
   };
 
-  if (isError) return <p className="p-4 text-red-500">Xatolik yuz berdi!</p>;
-
   return (
-    <div className="w-full lg:w-[310px] min-w-[240px]">
-      <ConfigProvider theme={{ token: { colorPrimary: "#46A358" } }}>
-        <div className="bg-[#FBFBFB] p-4">
-          <h3 className="text-[18px] font-bold mb-4 text-[#3D3D3D]">
-            Categories
-          </h3>
-          <ul className="space-y-4 pl-2 mb-8">
-            {isLoading
-              ? Array.from({ length: 5 }).map((_, i) => (
-                  <Skeleton
-                    key={i}
-                    active
-                    paragraph={{ rows: 0 }}
-                    title={{ width: "100%" }}
-                  />
-                ))
-              : categories.map((item) => (
-                  <li
-                    key={item._id}
-                    onClick={() => handleFilter(item._id)}
-                    className={`flex justify-between cursor-pointer hover:text-[#46A358] transition-all ${
-                      currentCategory === item._id
-                        ? "text-[#46A358] font-bold"
-                        : "text-[#3D3D3D]"
-                    }`}
-                  >
-                    <span>{item.title}</span>
-                    <span>({item.count})</span>
-                  </li>
-                ))}
-          </ul>
+    <div className="flex flex-col gap-8">
+      <section>
+        <h2 className="font-bold text-[18px] mb-3 px-5">Categories</h2>
+        <div className="px-5 flex flex-col gap-4">
+          {isLoading || isError
+            ? categoryLoader()
+            : categories?.map((value) => (
+                <div
+                  onClick={() => setParam({ category: value.route_path })}
+                  key={value._id}
+                  className={`flex items-center justify-between hover:text-[#46a358] cursor-pointer text-[15px] transition-all ${
+                    getParam("category") === value.route_path
+                      ? "text-[#46a358] font-bold"
+                      : "text-[#3d3d3d]"
+                  }`}
+                >
+                  <h3>{value.title}</h3>
+                  <h3 className="font-medium">({value.count})</h3>
+                </div>
+              ))}
+        </div>
+      </section>
 
-          <h3 className="text-[18px] font-bold mb-4 text-[#3D3D3D]">
-            Price Range
-          </h3>
-          <Slider
-            range
-            min={0}
-            max={1500}
-            value={range}
-            onChange={(val) => setRange(val as number[])}
+      <section className="px-5">
+        <h2 className="font-bold text-[18px] mb-3">Price Range</h2>
+        <div className="flex flex-col gap-4">
+          <input
+            type="range"
+            min="39"
+            max="1500"
+            className="accent-[#46a358] cursor-pointer"
+            onChange={(e) => setPriceRange([39, parseInt(e.target.value)])}
           />
-          <p className="mt-2">
+          <p className="text-[15px]">
             Price:{" "}
-            <span className="text-[#46A358] font-bold">
-              ${range[0]} - ${range[1]}
+            <span className="text-[#46a358] font-bold">
+              ${priceRange[0]} - ${priceRange[1]}
             </span>
           </p>
-          <Button
-            onClick={() => handleFilter()}
-            className="mt-4 bg-[#46A358] text-white w-full font-bold border-none h-[40px]"
+          <button
+            onClick={handleFilterPrice}
+            className="bg-[#46a358] text-white py-2 px-6 rounded-md hover:bg-[#3b8a4a] transition-all w-fit font-bold"
           >
             Filter
-          </Button>
+          </button>
         </div>
-      </ConfigProvider>
+      </section>
+
+      <section>
+        <h2 className="font-bold text-[18px] mb-3 px-5">Size</h2>
+        <div className="px-5 flex flex-col gap-4">
+          {sizes.map((size) => (
+            <div
+              key={size.id}
+              onClick={() => setParam({ size: size.key })}
+              className={`flex items-center justify-between hover:text-[#46a358] cursor-pointer text-[15px] transition-all ${
+                getParam("size") === size.key
+                  ? "text-[#46a358] font-bold"
+                  : "text-[#3d3d3d]"
+              }`}
+            >
+              <h3>{size.title}</h3>
+              <h3 className="font-medium">({size.count})</h3>
+            </div>
+          ))}
+        </div>
+      </section>
 
       <Discount />
     </div>
   );
 };
 
-export default Categor;
+export default Category;

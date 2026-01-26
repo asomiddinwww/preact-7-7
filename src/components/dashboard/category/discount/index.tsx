@@ -18,7 +18,7 @@ const Discount = () => {
   }
 
   return (
-    <div className="bg-[#FBFBFB] mt-5 p-4 text-center">
+    <div className="bg-[#FBFBFB] mt-5 p-4 text-center p-5">
       <h2 className="text-[#46A358] text-2xl font-bold">
         {flowerData?.discoount_up_to || 0}% OFF
       </h2>
