@@ -1,1 +1,2 @@
 ReferenceError;
+fetch;
