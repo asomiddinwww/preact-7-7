@@ -28,6 +28,12 @@ export const userSlice = createSlice({
   reducers: {
     getUser(state, action: PayloadAction<AuthType | null>) {
       state.user = action.payload;
+
+      if (action.payload) {
+        Cookies.set("user", JSON.stringify(action.payload), { expires: 7 }); // 7 kunga saqlash
+      } else {
+        Cookies.remove("user");
+      }
     },
   },
 });

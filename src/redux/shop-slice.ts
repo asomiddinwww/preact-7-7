@@ -3,28 +3,30 @@ import type { ShopCardType } from "../@types/inedx";
 
 interface InitialStateType {
   data: ShopCardType[];
+  wishlist: ShopCardType[];
 }
 
-const getStoredData = (): ShopCardType[] => {
+const getStoredData = (key: string): ShopCardType[] => {
   try {
-    const shopData = localStorage.getItem("shop");
-    return shopData ? JSON.parse(shopData) : [];
+    const storedData = localStorage.getItem(key);
+    return storedData ? JSON.parse(storedData) : [];
   } catch (error) {
     return [];
   }
 };
 
 const initialState: InitialStateType = {
-  data: getStoredData(),
+  data: getStoredData("shop"),
+  wishlist: getStoredData("wishlist"), // Wishlist yuklanmoqda
 };
 
 const shopSlice = createSlice({
   name: "shop-slice",
   initialState,
   reducers: {
+    // --- SAVATCHA MANTIQI ---
     getData(state, { payload }: PayloadAction<ShopCardType>) {
       const exists = state.data.find((value) => value._id === payload._id);
-
       if (exists) {
         state.data.forEach((value) => {
           if (value._id === payload._id) {
@@ -33,20 +35,39 @@ const shopSlice = createSlice({
           }
         });
       } else {
-        state.data.push({
-          ...payload,
-          counter: 1,
-          userPrice: payload.price,
-        });
+        state.data.push({ ...payload, counter: 1, userPrice: payload.price });
       }
-
       localStorage.setItem("shop", JSON.stringify(current(state).data));
     },
+
     deleteData(state, { payload }) {
       state.data = state.data.filter((value) => value._id !== payload);
       localStorage.setItem("shop", JSON.stringify(current(state).data));
     },
 
+    // --- LIKE (WISHLIST) MANTIQI ---
+    toggleWishlist(state, { payload }: PayloadAction<ShopCardType>) {
+      const exists = state.wishlist.find((item) => item._id === payload._id);
+
+      if (exists) {
+        // Agar allaqachon bo'lsa - o'chirib tashlaymiz
+        state.wishlist = state.wishlist.filter(
+          (item) => item._id !== payload._id,
+        );
+      } else {
+        // Agar yo'q bo'lsa - qo'shamiz
+        state.wishlist.push(payload);
+      }
+      // LocalStorage ga saqlash
+      localStorage.setItem("wishlist", JSON.stringify(current(state).wishlist));
+    },
+
+    removeFromWishlist(state, { payload }: PayloadAction<string>) {
+      state.wishlist = state.wishlist.filter((item) => item._id !== payload);
+      localStorage.setItem("wishlist", JSON.stringify(current(state).wishlist));
+    },
+
+    // --- INCREMENT / DECREMENT ---
     increment(state, { payload }) {
       state.data = state.data.map((value) => {
         if (value._id === payload) {
@@ -71,5 +92,13 @@ const shopSlice = createSlice({
   },
 });
 
-export const { getData, deleteData, increment, decrement } = shopSlice.actions;
+export const {
+  getData,
+  deleteData,
+  increment,
+  decrement,
+  toggleWishlist,
+  removeFromWishlist,
+} = shopSlice.actions;
+
 export default shopSlice.reducer;

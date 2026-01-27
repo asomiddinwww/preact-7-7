@@ -6,9 +6,7 @@ const CardTotal = () => {
   const navigate = useNavigate();
   return (
     <div className="w-[450px]!">
-      <h3 className="pb-5 text-[#3D3D3D] border-b border-[#46A358] font-bold text-[18px]">
-        Card Total
-      </h3>
+      <h3 className="pb-5 text-[#3D3D3D] font-bold text-[18px]">Card Total</h3>
       <Form className="flex h-[40px] mt-[35px]">
         <input
           name="coupon"

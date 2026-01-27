@@ -1,9 +1,15 @@
 import blogimg from "../../img/blog.png";
 import { setAuhorizationModalVisiblty } from "../../redux/modal-store";
-import { useReduxDispatch } from "../../hooks/useRedux";
+import { useReduxDispatch, useReduxSelector } from "../../hooks/useRedux";
 
 const Blog = () => {
   const dispatch = useReduxDispatch();
+
+  const { user } = useReduxSelector((state) => state.userSlice);
+
+  if (user) {
+    return null;
+  }
   return (
     <div className="w-full pt-13">
       <div className="w-[90%] m-auto flex flex-col justify-center items-center gap-[20px]">

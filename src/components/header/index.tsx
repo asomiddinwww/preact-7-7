@@ -73,7 +73,7 @@ const Header = () => {
           <img src={search} alt="search" className="w-5 cursor-pointer" />
           <div className=" cursor-pointer" onClick={() => navigate("shop")}>
             <Badge count={data.length}>
-              <img src={shop} alt="shop" className="w-5 cursor-pointer" />
+              <img src={shop} alt="" />
             </Badge>
           </div>
 

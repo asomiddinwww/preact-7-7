@@ -1,7 +1,7 @@
 import { useSearchParams } from "react-router-dom";
 import { useQueryHandler } from "../../../hooks/useQuery";
-import Card from "./card";
 import SkeletonImage from "antd/es/skeleton/Image";
+import Card from "./card";
 
 export const useSearchParamsHandler = () => {
   const [params, setParams] = useSearchParams();

@@ -1,7 +1,7 @@
 import { ShoppingCart, Heart, Search } from "lucide-react";
 import { useNavigate } from "react-router-dom";
-import { useReduxDispatch, useReduxSelector } from "../../../../hooks/useRedux";
-import { getData } from "../../../../redux/shop-slice";
+import { useReduxDispatch, useReduxSelector } from "../../../../hooks/useRedux"; // Selector qo'shildi
+import { getData, toggleWishlist } from "../../../../redux/shop-slice"; // toggleWishlist to'g'ri nomlandi
 import type { ShopCardType } from "../../../../@types/inedx";
 import type { FC } from "react";
 
@@ -10,12 +10,20 @@ const Card: FC<ShopCardType> = (props) => {
 
   const navigate = useNavigate();
   const dispatch = useReduxDispatch();
-  const { data } = useReduxSelector((state) => state.shopSlice);
-  console.log(data);
+
+  const { wishlist } = useReduxSelector((state) => state.shopSlice);
+  const isLiked = wishlist?.some((item) => item._id === _id);
 
   const addToCart = (e: React.MouseEvent) => {
     e.stopPropagation();
     dispatch(getData(props));
+  };
+
+  const handleLike = (e: React.MouseEvent) => {
+    e.stopPropagation();
+    // Slice-dagi yangi funksiya nomi toggleWishlist di
+    dispatch(toggleWishlist(props));
+    navigate("/wishlist");
   };
 
   return (
@@ -30,21 +38,24 @@ const Card: FC<ShopCardType> = (props) => {
         <div className="absolute bottom-[-50px] left-0 right-0 flex justify-center gap-4 transition-all duration-500 group-hover:bottom-4">
           <button
             onClick={addToCart}
+            title="Add to Cart"
             className="bg-white p-2 rounded-lg text-[#3D3D3D] hover:bg-[#46A358] hover:text-white shadow-md transition-colors"
           >
             <ShoppingCart size={20} />
           </button>
+
           <button
-            onClick={(e) => e.stopPropagation()}
-            className="bg-white p-2 rounded-lg text-[#3D3D3D] hover:bg-[#46A358] hover:text-white shadow-md transition-colors"
+            onClick={handleLike}
+            title="Add to Wishlist"
+            className={`bg-white p-2 rounded-lg shadow-md transition-colors ${
+              isLiked ? "text-[#46A358]" : "text-[#3D3D3D]"
+            } hover:bg-[#46A358] hover:text-white`}
           >
-            <Heart size={20} />
+            <Heart size={20} fill={isLiked ? "#46A358" : "none"} />
           </button>
+
           <button
-            onClick={(e) => {
-              e.stopPropagation();
-              navigate(`/product/${_id}`);
-            }}
+            onClick={() => navigate("/search")}
             className="bg-white p-2 rounded-lg text-[#3D3D3D] hover:bg-[#46A358] hover:text-white shadow-md transition-colors"
           >
             <Search size={20} />

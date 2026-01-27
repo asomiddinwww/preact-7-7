@@ -14,22 +14,22 @@ export const useLoginMutation = () => {
     mutationKey: ["login"],
     mutationFn: (data: object) =>
       axios({ url: "user/sign-in", method: "POST", body: data }),
-    onSuccess: (data) => {
-      if (data?.token) {
-        localStorage.setItem("token", data.token);
+    onSuccess: (res) => {
+      const responseData = res.data;
+
+      if (responseData?.token) {
+        localStorage.setItem("token", responseData.token);
+        Cookies.set("token", responseData.token);
+        Cookies.set("user", JSON.stringify(responseData.user));
+
         message.success("Tizimga kirdingiz!");
+
+        dispatch(getUser(responseData.user));
+
+        dispatch(setAuhorizationModalVisiblty());
       }
-      console.log("Backend response:", data);
 
-      const { token, user } = data;
-
-      console.log(token, user);
-
-      Cookies.set("token", token);
-      Cookies.set("user", JSON.stringify(user));
-      dispatch;
-      getUser(user);
-      dispatch(setAuhorizationModalVisiblty());
+      console.log("Backend response:", responseData);
     },
     onError: (error: any) => {
       const errorMsg =

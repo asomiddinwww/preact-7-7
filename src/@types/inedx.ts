@@ -95,3 +95,10 @@ export interface ShopCardType extends ProductType {
   counter: number;
   userPrice: number;
 }
+export interface Product {
+  id: number;
+  name: string;
+  price: number;
+  image: string;
+  category: string;
+}

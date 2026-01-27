@@ -2,13 +2,28 @@ import React from "react";
 import { Loader } from "lucide-react";
 import { Form, Input, message } from "antd";
 import { useLoginMutation } from "../../../../../hooks/useQuery/useQueryAction";
-import { GoogleLogin } from "@react-oauth/google"; // Bu komponent xavfsizroq va osonroq
+import { GoogleLogin } from "@react-oauth/google";
+import { setAuhorizationModalVisiblty } from "../../../../../redux/modal-store";
+import { useReduxDispatch } from "../../../../../hooks/useRedux";
+import { setCredentials } from "../../../../../redux/auth-slice";
 
 const Login: React.FC = () => {
+  const dispatch = useReduxDispatch();
+
   const { mutate, isPending } = useLoginMutation();
 
   const onFinish = (values: any) => {
-    mutate(values);
+    mutate(values, {
+      onSuccess: (res: any) => {
+        const { token, user } = res.data;
+
+        dispatch(setCredentials({ token, user }));
+
+        message.success("Muvaffaqiyatli kirdingiz!");
+        dispatch(setAuhorizationModalVisiblty());
+      },
+      onError: () => message.error("Xato!"),
+    });
   };
 
   const handleGoogleSuccess = (response: any) => {
