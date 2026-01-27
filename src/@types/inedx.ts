@@ -91,3 +91,7 @@ export interface DiscountFlowerType {
   poster_image_url: string;
   title: string;
 }
+export interface ShopCardType extends ProductType {
+  counter: number;
+  userPrice: number;
+}

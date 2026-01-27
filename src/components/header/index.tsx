@@ -3,15 +3,17 @@ import logo from "../../img/Logo.svg";
 import search from "../../img/search.svg";
 import shop from "../../img/shop.svg";
 import log from "../../img/Logout.svg";
-import { Button } from "antd";
-import { NavLink } from "react-router-dom";
-import { useReduxDispatch } from "../../hooks/useRedux";
+import { Badge, Button } from "antd";
+import { NavLink, useNavigate } from "react-router-dom";
+import { useReduxDispatch, useReduxSelector } from "../../hooks/useRedux";
 import { setAuhorizationModalVisiblty } from "../../redux/modal-store";
 import { MenuOutlined, CloseOutlined } from "@ant-design/icons";
 
 const Header = () => {
   const dispatch = useReduxDispatch();
   const [isMenuOpen, setIsMenuOpen] = useState(false);
+  const navigate = useNavigate();
+  const { data } = useReduxSelector((state) => state.shopSlice);
 
   const toggleMenu = () => setIsMenuOpen(!isMenuOpen);
 
@@ -35,11 +37,11 @@ const Header = () => {
               Home
             </NavLink>
             <NavLink
-              to={"/shop"}
+              to="/shop"
               className={({ isActive }) =>
                 isActive
-                  ? "border-b-3 pb-3 border-[#46A358]"
-                  : "pb-3 border-b-3 border-[#ffffff00]"
+                  ? "border-b-[3px] pb-3 border-[#46A358]"
+                  : "pb-3 border-b-[3px] border-transparent"
               }
             >
               Shop
@@ -69,7 +71,11 @@ const Header = () => {
 
         <div className="flex items-center gap-3 md:gap-7">
           <img src={search} alt="search" className="w-5 cursor-pointer" />
-          <img src={shop} alt="shop" className="w-5 cursor-pointer" />
+          <div className=" cursor-pointer" onClick={() => navigate("shop")}>
+            <Badge count={data.length}>
+              <img src={shop} alt="shop" className="w-5 cursor-pointer" />
+            </Badge>
+          </div>
 
           <Button
             onClick={() => dispatch(setAuhorizationModalVisiblty())}
@@ -87,7 +93,6 @@ const Header = () => {
         </div>
       </div>
 
-      {/* Mobil Menu (Ochildi-yopildi mantiqi) */}
       <div
         className={`fixed z-999 w-full h-[100vh] w-full bg-white border-b border-[#46A35880] transition-all duration-300 md:hidden ${isMenuOpen ? "opacity-100 visible" : "opacity-0 invisible"}`}
       >
