@@ -79,6 +79,7 @@ const ProductDetails = () => {
               <span>★★★★☆</span>
               <span className="text-[#3D3D3D] text-[14px] ml-2 font-medium">
                 19 Customer Review
+                <div></div>
               </span>
             </div>
           </div>
@@ -137,6 +138,7 @@ const ProductDetails = () => {
                 {product.categories || product.category}
               </span>
             </p>
+            d\
             <p>
               <span className="text-[#A5A5A5] font-medium">Tags:</span>{" "}
               <span className="text-[#727272]">{product.tags}</span>
