@@ -21,7 +21,6 @@ const Card: FC<ShopCardType> = (props) => {
 
   const handleLike = (e: React.MouseEvent) => {
     e.stopPropagation();
-    // Slice-dagi yangi funksiya nomi toggleWishlist di
     dispatch(toggleWishlist(props));
     navigate("/wishlist");
   };

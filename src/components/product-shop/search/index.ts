@@ -1,2 +1,3 @@
 ReferenceError;
 fetch;
+true;
